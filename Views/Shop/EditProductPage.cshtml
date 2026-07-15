@@ -1,0 +1,22 @@
+﻿@model EditProductPageModel
+
+@{
+    string headerText = Model.Action == PageAction.Add ? "Добавить" : "Изменить";
+}
+
+<header>
+    <h1>@headerText продукт</h1>
+    <a class="btn btn-back-to-menu">← Назад в меню</a>
+</header>
+<main>
+    <div class="window-edit">
+        <label class="window-title">Заполните поля</label>
+        <form method="post" asp-action="EditProductPage" asp-controller="Shop">
+            <input type="text" placeholder="Название продукта" asp-for="Product.Name" required/>
+            <input type="number" placeholder="Цена за штуку" asp-for="Product.Price" required/>
+            <input type="number" placeholder="Количество на складе." asp-for="Product.Count" required/>
+            <textarea rows="10" cols="40" placeholder="Описание продукта" asp-for="Product.Description"></textarea>
+            <input type="submit" value="@headerText" />
+        </form>
+    </div>
+</main>

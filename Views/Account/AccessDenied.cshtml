@@ -1,0 +1,10 @@
+﻿@section Style {
+    <link rel="stylesheet" href="~/css/AccessDenied.css" />
+}
+
+<main>
+    <span class="denied-title">У вас недостаточно прав!</span>
+    <form method="post">
+        <button asp-action="AccessDenied" asp-controller="Account" class="confirm-button">Ок</button>
+    </form>
+</main>

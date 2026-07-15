@@ -1,0 +1,21 @@
+﻿@model RegistrationModel
+
+@section Style {
+    <link rel="stylesheet" href="~/css/AuthenticationPages.css" />
+}
+
+<main>
+<div class="registration-card">
+    <span class="registration-title">Регистрация</span>
+    <div class="seporator-card"></div>
+    <form method="post">
+        <div asp-validation-summary="All"></div>
+        <input type="text" asp-for="Login" placeholder="Логин" />
+        <input type="password" placeholder="Пароль" asp-for="Password" />
+        <input type="password" placeholder="Повторите пароль" asp-for="Password" />
+        <input type="submit" value="Зарегистрироваться" />
+    </form>
+    <div class="seporator-card"></div>
+    <a class="come-to-login" asp-action="Login" asp-controller="Account">Вход →</a>
+</div>
+</main>

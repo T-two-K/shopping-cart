@@ -1,0 +1,51 @@
+﻿*{
+    padding: 0;
+    margin: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    height: 100vh;
+    background-image: linear-gradient(to bottom right, #442277, #332288)
+}
+
+main{
+    border-radius: 15px;
+    margin: auto;
+    padding: 30px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: #6622ee;
+    gap: 50px;
+}
+
+.denied-title{
+    font-size: 2em;
+    color: beige;
+}
+
+.confirm-button{
+    width: 150px;
+    border-radius: 5px;
+    border-color: #440000;
+    background-color: #881111;
+    padding: 10px;
+    color: bisque;
+    transition: all 0.1s linear;
+    box-shadow: -3px 3px 3px 0.5px rgba(0, 0, 0,  0.3);
+}
+
+.confirm-button:hover{
+    cursor: pointer;
+    background-color: #991111;
+    transform: scale(1.02);
+}
+
+.confirm-button:active{
+    background-color: #770000;
+    transform: scale(0.98);
+}
