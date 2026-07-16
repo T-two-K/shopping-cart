@@ -11,8 +11,16 @@ namespace ShoppingCart.Database.Repositories
 
         public async Task<bool> AddAsync(Product product)
         {
-            await _context.Products.AddAsync(product);
-            await _context.SaveChangesAsync();
+            try
+            {
+                await _context.Products.AddAsync(product);
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateException ex)
+            {
+                var realReason = ex.InnerException?.Message ?? ex.Message;
+                throw new Exception(realReason);
+            }
 
             return true;
         }
@@ -25,7 +33,11 @@ namespace ShoppingCart.Database.Repositories
 
         public async Task<bool> UpdateAsync(Product product)
         {
-            _context.Products.Update(product);
+            var entry = _context.Entry(product);
+
+            if (entry.State == EntityState.Detached)
+                _context.Products.Update(product);
+
             await _context.SaveChangesAsync();
 
             return true;
@@ -67,14 +79,11 @@ namespace ShoppingCart.Database.Repositories
             {
                 Product? product = products.FirstOrDefault(p => p.Id == cartItem.ProductId);
 
-                CartItem oldItem = oldCartItems.FirstOrDefault(oci => oci.ProductId == cartItem.ProductId)
-                    ?? new() { Quantity = 0};
-
                 if (product == null)
                     continue;
 
-                if (product.Count + oldItem.Quantity < cartItem.Quantity)
-                    cartItem.Quantity = product.Count + oldItem.Quantity;
+                if (product.Count < cartItem.Quantity)
+                    cartItem.Quantity = product.Count;
 
                 product.Count -= cartItem.Quantity;
 

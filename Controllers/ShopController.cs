@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Mvc;
 using ShoppingCart.Contracts;
 using ShoppingCart.Interfaces.IApp;
-using ShoppingCart.Interfaces.IRepository;
 using ShoppingCart.Models;
 
 namespace ShoppingCart.Controllers
@@ -34,19 +33,39 @@ namespace ShoppingCart.Controllers
         }
 
         [HttpGet]
+        public async Task<IActionResult> ViewProductInfo(int id)
+        {
+            Product? product = await _dataManager.ProductRepository.GetByIdAsync(id);
+
+            if (product == null)
+                return await MainPage();
+
+            ViewProductInfoModel model = new()
+            {
+                Name = product.Name,
+                Price = product.Price,
+                Count = product.Count,
+                Description = (product.Description ?? "Описание отсутствует").Trim()
+            };
+
+            return View(model);
+        }
+
+        [HttpGet]
         [Authorize(Roles = "admin")]
-        public async Task<IActionResult> EditProductPage(int productId = -1)
+        public async Task<IActionResult> EditProductPage(int id)
         {
             EditProductPageModel model = new();
 
-            if (productId == -1 || productId == 0)
+            if (id == 0)
             {
                 model.Action = PageAction.Add;
             }
             else
             {
                 model.Action = PageAction.Update;
-                model.Product = await _dataManager.ProductRepository.GetByIdAsync(productId) ?? new();
+                model.Product = await _dataManager.ProductRepository.GetByIdAsync(id) ?? new();
+                model.ProductPriceString = model.Product.Price.ToString();
             }
 
             return View(model);
@@ -62,25 +81,71 @@ namespace ShoppingCart.Controllers
                 return View(model);
             }
 
-            if (model.Action == PageAction.Add)
-                await _dataManager.ProductRepository.AddAsync(model.Product);
-            else
-                await _dataManager.ProductRepository.UpdateAsync(model.Product);
+            if (model.ProductPriceString.Contains('.'))
+                model.ProductPriceString = model.ProductPriceString.Replace('.', ',');
 
-            return View("MainPage");
+            if (!decimal.TryParse(model.ProductPriceString, out decimal price))
+            {
+                ModelState.AddModelError("", "Цена имеет невалидное значение!");
+                return View(model);
+            }
+
+            if (model.Action == PageAction.Add)
+            {
+                model.Product.Price = price;
+                await _dataManager.ProductRepository.AddAsync(model.Product);
+            }
+            else
+            {
+                Product? existingProduct = await _dataManager.ProductRepository.GetByIdAsync(model.Product.Id);
+
+                if (existingProduct == null)
+                {
+                    await _dataManager.ProductRepository.AddAsync(model.Product);
+                    return RedirectToAction(nameof(MainPage));
+                }
+
+                existingProduct.Name = model.Product.Name;
+                existingProduct.Description = model.Product.Description;
+                existingProduct.Count = model.Product.Count;
+                existingProduct.Price = price;
+
+                await _dataManager.ProductRepository.UpdateAsync(existingProduct);
+            }
+
+            return RedirectToAction(nameof(MainPage));
         }
 
         [HttpPost]
-        public async Task<JsonResult> ConfirmChanges([FromBody]List<CartItem> cartItems)
+        public async Task<JsonResult> ConfirmChanges([FromBody] List<CartItem> cartItems)
         {
             if (cartItems == null)
                 return Json(new MainPageModel());
 
+            List<Product> products = await _dataManager.ProductRepository.GetAllAsync();
+
+            List<CartItem> validCartItems =
+                cartItems.Where(ci => products.FirstOrDefault(p => p.Id == ci.ProductId) != null).ToList(); 
+
             int userId = GetUserIdFromClaim();
 
-            MainPageModel model = await _dataManager.UpdateProductData(userId, cartItems);
+            MainPageModel model = await _dataManager.UpdateProductData(userId, validCartItems);
 
             return Json(model);
+        }
+
+        [HttpPost]
+        [Authorize(Roles = "admin")]
+        public async Task<List<Product>> DeleteProduct([FromBody]int productId)
+        {
+            Product? deletedProduct = await _dataManager.ProductRepository.GetByIdAsync(productId);
+
+            if (deletedProduct == null)
+                return await _dataManager.ProductRepository.GetAllAsync();
+
+            await _dataManager.ProductRepository.RemoveAsync(deletedProduct);
+
+            return await _dataManager.ProductRepository.GetAllAsync();
         }
 
         private int GetUserIdFromClaim()

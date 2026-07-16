@@ -86,6 +86,11 @@ productList.addEventListener('click', function (event) {
 
     var productId = Number(productCard.dataset.productId);
 
+    var product = products.find(p => p.id == productId)
+    
+    if(product.count <= 0)
+        return;
+
     var cartItem = cartItems.find(ci => ci.productId == productId);
 
     if (cartItem)
@@ -113,7 +118,7 @@ function renderCart() {
         return;
     }
 
-    if(cartList.innerHTML == ""){
+    if (cartList.innerHTML == "") {
         cartList.innerHTML = '<p>Корзина пуста</p>';
         return;
     }
@@ -134,10 +139,12 @@ function changeProductCount(productId, changedQuality) {
     if (productList == null || products.length == 0)
         return;
 
-
     var product = products.find(p => p.id == productId);
 
     product.count += Number(changedQuality);
+
+    if(product.count < 0)
+        product.count = 0;
 
     var productCard = productList.querySelector(`.product-card[data-product-id="${productId}"]`);
     if (productCard) {
@@ -158,18 +165,38 @@ function renderProductList() {
     if (userRole == 'admin')
         productList.innerHTML = products.map(product =>
             `<div class="product-card" data-product-id="${product.id}" data-name="${product.name}">
-            <label class="product-info product-title">${product.name}</label>
-            <label class="product-info product-price">${product.price.toFixed(2).replace('.', ',')} ₽</label>
-            <label class="product-info product-count">Доступно: ${product.count}</label>
-            <button class="btn btn-add-to-cart">Добавить в корзину 🧺</button>
-            <a class="btn product-delete-btn" asp-action="DeleteProduct" asp-controller="Shop"></a>
-            <a class="btn product-update-btn" ></a>
-        </div>`
+                <div class="product-card-header">
+                    <label class="product-info product-title">${product.name}</label>
+
+                    <div class="product-actions">
+                        <a class="btn product-more-info-btn" asp-action="ViewProductInfo"
+                            asp-controller="Shop" asp-route-id="${product.id}">ℹ️</a>
+                            <form method="get" asp-action="EditProductPage" asp-controller="Shop"
+                                asp-route-id="${product.id}">
+                                <button type="submit" class="btn product-update-btn">✏️</button>
+                            </form>
+                            <button type="submit" class="btn product-delete-btn"
+                                data-product-id="${product.id}">❌</button>
+                    </div>
+                </div>
+
+                <label class="product-info product-price">${product.price.toFixed(2).replace('.', ',')} ₽</label>
+                <label class="product-info product-count">Доступно: ${product.count}</label>
+                <button class="btn btn-add-to-cart">Добавить в корзину 🧺</button>
+            </div>`
         ).join('');
     else
         productList.innerHTML = products.map(product =>
             `<div class="product-card" data-product-id="${product.id}" data-name="${product.name}">
-                <label class="product-info product-title">${product.name}</label>
+                <div class="product-card-header">
+                    <label class="product-info product-title">${product.name}</label>
+
+                    <div class="product-actions">
+                        <a class="btn product-more-info-btn" asp-action="ViewProductInfo"
+                            asp-controller="Shop" asp-route-id="${product.id}">ℹ️</a>
+                    </div>
+                </div>
+
                 <label class="product-info product-price">${product.price.toFixed(2).replace('.', ',')} ₽</label>
                 <label class="product-info product-count">Доступно: ${product.count}</label>
                 <button class="btn btn-add-to-cart">Добавить в корзину 🧺</button>
@@ -192,8 +219,10 @@ cartList.addEventListener('input', function (event) {
     var maxAllowed = product.count + oldQuantity;
     var newQuantity = Number(input.value);
 
-    if (newQuantity < 0)
+    if (newQuantity < 0) {
         newQuantity = 0;
+        input.value = '0';
+    }
 
     if (newQuantity > maxAllowed) {
         newQuantity = maxAllowed;
@@ -221,4 +250,23 @@ cartList.addEventListener('click', function (event) {
 
     changeProductCount(productId, cartItem.quantity);
     renderCart();
+});
+
+productList.addEventListener('click', async function(event) {
+    if(!event.target.classList.contains('product-delete-btn'))
+        return;
+
+    var productDeleteBtn = event.target;
+
+    var response = await fetch("/Shop/DeleteProduct", {
+        method: 'post',
+        headers: {'Content-Type' : 'application/json'},
+        body: JSON.stringify(productDeleteBtn.dataset.productId)
+    });
+
+    var productsData = await response.json();
+
+    products = productsData;
+
+    renderProductList();
 });

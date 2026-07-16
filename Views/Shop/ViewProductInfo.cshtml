@@ -1,0 +1,30 @@
+﻿@model ViewProductInfoModel
+
+@section Script {
+    <link rel="stylesheet" href="~/css/ViewProductPage.css" />
+}
+
+<header>
+    <h1>Информация о товаре</h1>
+    <a class="btn btn-back-to-menu" asp-action="MainPage" asp-controller="Shop">← Назад в меню</a>
+</header>
+<main>
+    <div class="window-view">
+        <label class="window-title">@Model.Name</label>
+        <div class="seporator-card"></div>
+        <div class="view-info-row">
+            <span class="view-label">Цена за штуку</span>
+            <span class="view-value view-price">@Math.Round(Model.Price, 2) ₽</span>
+        </div>
+
+        <div class="view-info-row">
+            <span class="view-label">Доступно на складе</span>
+            <span class="view-value">@Model.Count шт.</span>
+        </div>
+
+        <div class="view-description">
+            <span class="view-label">Описание</span>
+            <span class="view-description-text">@(string.IsNullOrWhiteSpace(Model.Description) ? "Описание отсутствует" : Model.Description.Trim())</span>
+        </div>
+    </div>
+</main>

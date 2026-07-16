@@ -42,10 +42,9 @@ namespace ShoppingCart.Services
 
                 List<Product>  products = await ProductRepository.GetAllAsync();
 
-
                 await CartItemRepository.RemoveRangeAsync(userCart.CartItems);
 
-                List<CartItem> newCartItems = cartItems.Select(ci => new CartItem
+                List<CartItem> newCartItems = cartItems.Where(ci => ci.Quantity > 0).Select(ci => new CartItem
                 {
                     CartId = userCart.Id,
                     ProductId = ci.ProductId,

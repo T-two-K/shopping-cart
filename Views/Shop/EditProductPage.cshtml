@@ -2,18 +2,29 @@
 
 @{
     string headerText = Model.Action == PageAction.Add ? "Добавить" : "Изменить";
+    int productId = 0;
+    if (Model.Product != null)
+        productId = Model.Product.Id;
+}
+
+@section Style{
+    <link rel="stylesheet" href="~/css/EditProductPage.css"/> 
 }
 
 <header>
     <h1>@headerText продукт</h1>
-    <a class="btn btn-back-to-menu">← Назад в меню</a>
+    <a class="btn btn-back-to-menu" asp-action="MainPage" asp-controller="Shop">← Назад в меню</a>
 </header>
 <main>
     <div class="window-edit">
         <label class="window-title">Заполните поля</label>
-        <form method="post" asp-action="EditProductPage" asp-controller="Shop">
+        <form method="Post" asp-action="EditProductPage" asp-controller="Shop">
+            <input type="hidden" asp-for="Action"/>
+            <input type="hidden" asp-for="Product.Id" value="@productId"/>
+            <div asp-validation-summary="All"></div>
             <input type="text" placeholder="Название продукта" asp-for="Product.Name" required/>
-            <input type="number" placeholder="Цена за штуку" asp-for="Product.Price" required/>
+            <input type="text" placeholder="Цена за штуку, например: 200.45"
+                    step="any" asp-for="ProductPriceString" required/>
             <input type="number" placeholder="Количество на складе." asp-for="Product.Count" required/>
             <textarea rows="10" cols="40" placeholder="Описание продукта" asp-for="Product.Description"></textarea>
             <input type="submit" value="@headerText" />

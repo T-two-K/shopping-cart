@@ -4,40 +4,60 @@
     <script src="~/js/MainPage.js"></script>
 }
 
+@section Style{
+    <link rel="stylesheet" href="~/css/MainPage.css" />
+}
+
 <header>
     <div>
         <h1>Окно с товарами</h1>
-        @if (User.IsInRole("admin"))
-        {
-            <a asp-action="EditProductPage" asp-controller="Shop" class="btn btn-primary">Добавить товар +</a>
-        }
+        <div class="header-btn-container">
+            @if (User.IsInRole("admin"))
+            {
+                <a asp-action="EditProductPage" asp-controller="Shop" class="btn btn-primary">Добавить товар +</a>
+            }
+            <a asp-action="LogOut" asp-controller="Account" class="btn btn-log-out">Выйти из аккаунта</a>
+        </div>
     </div>
 </header>
     <div class="main-container" data-role="@(@User.IsInRole("admin") ? "admin" : "user")">
         <div class="product-list-container"
-              data-product-list="@JsonSerializer.Serialize(Model.Products)">
-            @if (Model.Products != null && Model.Products.Count > 0)
-            {
-                @foreach (var product in Model.Products)
-                {
-                    <div class="product-card" data-product-id="@product.Id" data-name="@product.Name">
-                        <label class="product-info product-title">@product.Name</label>
-                        <label class="product-info product-price">@Math.Round(product.Price, 2) ₽</label>
-                        <label class="product-info product-count">Доступно: @product.Count</label>
-                        <button class="btn btn-add-to-cart">Добавить в корзину 🧺</button>
+      data-product-list="@JsonSerializer.Serialize(Model.Products)">
+    @if (Model.Products != null && Model.Products.Count > 0)
+    {
+        @foreach (var product in Model.Products)
+        {
+            <div class="product-card" data-product-id="@product.Id" data-name="@product.Name">
+                <div class="product-card-header">
+                    <label class="product-info product-title">@product.Name</label>
+
+                    <div class="product-actions">
+                        <a class="btn product-more-info-btn" asp-action="ViewProductInfo"
+                            asp-controller="Shop" asp-route-id="@product.Id">ℹ️</a>
+
                         @if (User.IsInRole("admin"))
                         {
-                            <a class="btn product-delete-btn" asp-action="DeleteProduct" asp-controller="Shop"></a>
-                            <a class="btn product-update-btn" data-count="@product.Count"></a>
+                            <form method="get" asp-action="EditProductPage" asp-controller="Shop"
+                                asp-route-id="@product.Id">
+                                <button type="submit" class="btn product-update-btn">✏️</button>
+                            </form>
+                            <button type="submit" class="btn product-delete-btn"
+                                data-product-id="@product.Id">❌</button>
                         }
                     </div>
-            }
+                </div>
+
+                <label class="product-info product-price">@Math.Round(product.Price, 2) ₽</label>
+                <label class="product-info product-count">Доступно: @product.Count</label>
+                <button class="btn btn-add-to-cart">Добавить в корзину 🧺</button>
+            </div>
         }
-        else
-        {
-            <p>Товаров пока нет!</p>
-        }
-        </div>
+    }
+    else
+    {
+        <p>Товаров пока нет!</p>
+    }
+</div>
 
         <div class="cart-container">
             <label class="header">Корзина с товарами 🧺</label>
@@ -52,8 +72,8 @@
                             <div class="cart-item-quantity">
                                 <label>Количество: </label>
                                 <input class="quantity-changer" type="number" value="@productInCart.Quantity" />
-                            </div>
-                            <button class="cart-remove-product-btn">Убрать из корзины ❌</button>                        </div>
+                        </div>
+                        <button class="cart-remove-product-btn">Убрать из корзины ❌</button>                        </div>
                     }
                 }
                 else

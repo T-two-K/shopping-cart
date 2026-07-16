@@ -1,0 +1,147 @@
+* {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    padding: 0;
+    margin: 0;
+    text-shadow: -1px 2px 5px rgba(0, 0, 0, 0.3);
+    box-sizing: border-box;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    background-image: linear-gradient(to bottom right, #442277, #332288);
+}
+
+header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 25px 5%;
+}
+
+header h1 {
+    color: bisque;
+    font-size: 2em;
+}
+
+.btn-back-to-menu {
+    display: inline-flex;
+    align-items: center;
+    border-radius: 5px;
+    border: none;
+    padding: 10px 16px;
+    color: bisque;
+    text-decoration: none;
+    cursor: pointer;
+    background-color: #332266;
+    transition: all 0.1s linear;
+    box-shadow: -3px 3px 3px 0.5px rgba(0, 0, 0, 0.3);
+}
+
+.btn-back-to-menu:hover {
+    background-color: #443377;
+    transform: scale(1.02);
+}
+
+.btn-back-to-menu:active {
+    background-color: #221155;
+    transform: scale(0.98);
+}
+
+main {
+    display: flex;
+    flex-grow: 1;
+    align-items: center;
+    justify-content: center;
+}
+
+.window-view {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    min-height: 450px;
+    min-width: 380px;
+    max-width: 480px;
+    padding: 30px 5%;
+    border-radius: 15px;
+    background-color: #6622ee;
+    box-shadow: -10px 10px 15px 10px rgba(0, 0, 0, 0.3);
+}
+
+.window-title {
+    color: bisque;
+    font-size: 1.6em;
+    font-weight: 600;
+    text-align: center;
+}
+
+.seporator-card{
+    height: 1px;
+    width: 100%;
+    background-color: #AAA;
+}
+
+.view-info-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 14px;
+    border-radius: 8px;
+    background-color: #442277;
+}
+
+.view-label {
+    color: bisque;
+    opacity: 0.8;
+    font-size: 0.9em;
+}
+
+.view-value {
+    color: bisque;
+    font-weight: 600;
+}
+
+.view-price {
+    color: #ffd9a8;
+}
+
+.view-description {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 12px 14px;
+    border-radius: 8px;
+    background-color: #442277;
+    flex-grow: 1;
+}
+
+.view-description-text {
+    color: bisque;
+    opacity: 0.9;
+    line-height: 1.4;
+    white-space: pre-wrap;
+    overflow-y: auto;
+    max-height: 180px;
+}
+
+.btn-add-to-cart {
+    border: none;
+    border-radius: 5px;
+    padding: 10px;
+    color: bisque;
+    background-color: #881111;
+    cursor: pointer;
+    transition: all 0.1s linear;
+    box-shadow: -3px 3px 3px 0.5px rgba(0, 0, 0, 0.3);
+}
+
+.btn-add-to-cart:hover {
+    background-color: #991111;
+    transform: scale(1.02);
+}
+
+.btn-add-to-cart:active {
+    background-color: #770000;
+    transform: scale(0.98);
+}

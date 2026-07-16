@@ -16,9 +16,11 @@ namespace ShoppingCart.Database.Context
         {
             modelBuilder.Entity<Product>(e => {
                 e.HasKey(p => p.Id);
+                e.Property(p => p.Id).ValueGeneratedOnAdd();
+
                 e.Property(p => p.Name).HasMaxLength(50).IsRequired();
                 e.Property(p => p.Price).HasPrecision(18, 8).IsRequired();
-                e.Property(p => p.Description).HasMaxLength(400);
+                e.Property(p => p.Description).HasMaxLength(4000);
             });
 
             modelBuilder.Entity<Cart>(e =>
