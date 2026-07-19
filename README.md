@@ -48,3 +48,10 @@ In the end, I did some manual testing and fixed some bugs.
   dotnet run
 ```
 4. Once the project launches, a console will appear. Find the application's localhost address (something like this: _https://localhost:5001_) and paste it into the search bar of any browser. After that, the application will run normally.
+## 📚 What I learned
+- Learned how to authenticate and authorize a user (using Cookie Authentication);
+- Learned how to work with AJAX requests (using the fetch method with async/await);
+- Learned how to create server-side and client-side validation;
+- Learned how to work with the Stateless app;
+- Strengthened work with the DOM tree;
+## 🍿Application Design
