@@ -55,3 +55,23 @@ In the end, I did some manual testing and fixed some bugs.
 - Learned how to work with the Stateless app;
 - Strengthened work with the DOM tree;
 ## 🍿Application Design
+<div align="center">
+  <h3>Login page</h3>
+  <img src="UiScreenshots/LoginPage.png" alt="Design of login page of my application." />
+</div>
+<div align="center">
+  <h3>Registration page</h3>
+  <img src="UiScreenshots/RegistrationPage.png" alt="Design of registration page of my application." />
+</div>
+<div align="center">
+  <h3>Main menu</h3>
+  <img src="UiScreenshots/MainMenuPage.png" alt="Design of main menu page of my application." />
+</div>
+<div align="center">
+  <h3>Edit product page</h3>
+  <img src="UiScreenshots/EditProductPage.png" alt="Design of edit product page of my application." />
+</div>
+<div align="center">
+  <h3>View product info page</h3>
+  <img src="UiScreenshots/ViewProductInfoPage.png" alt="Product information viewer design." />
+</div>
