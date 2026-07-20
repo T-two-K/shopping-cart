@@ -78,7 +78,7 @@ In the end, I did some manual testing and fixed some bugs.
   <img src="UiScreenshots/RegistrationPage.png" alt="Design of registration page of my application." />
 </div>
 <div align="center">
-  <h3>Main menu</h3>
+  <h3>Main menu (Admin role)</h3>
   <img src="UiScreenshots/MainMenuPage.png" alt="Design of main menu page of my application." />
 </div>
 <div align="center">
