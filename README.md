@@ -40,14 +40,28 @@ In the end, I did some manual testing and fixed some bugs.
 - Add a "Ratings" field to the product that will be based on the average rating of all users.
 ## 🚀 Running the project
 1. Clone repository in your PC (use _git clone_ or download zip archive from main page of the repo).
-2. Open .csproj file (if you have Visual Studio) and run the project by pressing keyboard shortcut: "Ctrl + F5".
-3. If you don't have Visual Studio platform then use powershell (or other command line) and perform the following commands:
+2. If you don't have app "MySQL Workbench" you can load it here: [MySQL Workbench](https://dev.mysql.com/downloads/workbench/) (if you have any DBMS just skip this step).
+3. Setting up a connection string:  
+   3.1. Open file appsettings.json;  
+   3.2. In the quotes (after "DefaultConnection":) write the following string: "Server=localhost;database=yourdbname;pwd=yourpassword;uid=root;port=3306;" (don't forget to enter your data).  
+   3.3. If you have another database, than enter connection string for your provider (you can find it in the internet).  
+   3.4. And then save file.  
+4. Now we need to perform migrations:  
+   4.1. Open project in powershell or Visual Studio.  
+   4.2. Complete the following commands:
+   ```bash  
+      dotnet tool install --global dotnet-ef  
+      dotnet-ef database update
+   ```  
+   4.3. If previous command finished with an error than try to write: _dotnet add package Microsoft.EntityFrameworkCore.Design_ and complete it again.
+5. Open .csproj file (if you have Visual Studio) and run the project by pressing keyboard shortcut: "Ctrl + F5".
+6. If you don't have Visual Studio platform then use powershell (or other command line) and perform the following commands:
 ```
   dotnet restore
   dotnet build
   dotnet run
 ```
-4. Once the project launches, a console will appear. Find the application's localhost address (something like this: _https://localhost:5001_) and paste it into the search bar of any browser. After that, the application will run normally.
+7. Once the project launches, a console will appear. Find the application's localhost address (something like this: _https://localhost:5001_) and paste it into the search bar of any browser. After that, the application will run normally.
 ## 📚 What I learned
 - Learned how to authenticate and authorize a user (using Cookie Authentication);
 - Learned how to work with AJAX requests (using the fetch method with async/await);
